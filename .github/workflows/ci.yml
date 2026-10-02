@@ -18,10 +18,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # setup-python's macOS builds install into /Users/runner, which doesn't exist on
+      # a self-hosted Mac, so use the machine's own Python in a fresh virtualenv instead
       - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+        run: |
+          python3 --version
+          python3 -m venv .ci-venv
+          echo "$PWD/.ci-venv/bin" >> "$GITHUB_PATH"
 
       - name: Install dependencies
         run: |
